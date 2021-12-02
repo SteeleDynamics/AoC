@@ -24,7 +24,7 @@ val tokens =
     (String.tokens Char.isSpace)
     (readInput (TextIO.openIn "day2Input.txt", []))
 val cmds = List.map mkCmd tokens
-val (r3, d3) = List.foldr g (0,0) cmds
+val (r3, d3) = List.foldl g (0,0) cmds
 val soln3 = r3 * d3
 
 (* Advent of Code 2021, Puzzle 4 *)

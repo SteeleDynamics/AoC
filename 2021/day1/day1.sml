@@ -19,7 +19,7 @@ val input' = List.map
   (readInput (TextIO.openIn "day1Input.txt", []))
 val input = List.map f input'
 val cmps1 = prevCmp input
-val soln1 = List.foldr g 0 cmps1
+val soln1 = List.foldl g 0 cmps1
 
 (* Advent of Code 2021, Puzzle 2 *)
 fun windowSum (x1::x2::x3::xs) = (x1+x2+x3) :: windowSum (x2::x3::xs)
@@ -27,4 +27,4 @@ fun windowSum (x1::x2::x3::xs) = (x1+x2+x3) :: windowSum (x2::x3::xs)
 
 val sums = windowSum input
 val cmps2 = prevCmp sums
-val soln2 = List.foldr g 0 cmps2
+val soln2 = List.foldl g 0 cmps2
