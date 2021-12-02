@@ -10,20 +10,20 @@ val readInput = fn : TextIO.instream * string list -> string list
 val mkCmd = fn : string list -> cmd
 val g = fn : cmd * (int * int) -> int * int
 val tokens =
-  [["forward","3"],["down","7"],["forward","8"],["down","9"],["forward","3"],
-   ["down","5"],["down","9"],["down","6"],["forward","1"],["forward","8"],
-   ["forward","9"],["forward","3"],["down","7"],["down","8"],["up","3"],
-   ["down","5"],...] : string list list
+  [["forward","6"],["down","3"],["forward","8"],["down","5"],["forward","9"],
+   ["down","2"],["up","9"],["down","9"],["forward","8"],["down","3"],
+   ["down","8"],["forward","2"],["down","1"],["up","3"],["up","6"],["up","9"],
+   ...] : string list list
 val cmds =
-  [Forward 3,Down 7,Forward 8,Down 9,Forward 3,Down 5,Down 9,Down 6,Forward 1,
-   Forward 8,Forward 9,Forward 3,Down 7,Down 8,Up 3,Down 5,...] : cmd list
-val r3 = 1832 : int
-val d3 = 1172 : int
-val soln3 = 2147104 : int
+  [Forward 6,Down 3,Forward 8,Down 5,Forward 9,Down 2,Up 9,Down 9,Forward 8,
+   Down 3,Down 8,Forward 2,Down 1,Up 3,Up 6,Up 9,...] : cmd list
+val r3 = 1962 : int
+val d3 = 987 : int
+val soln3 = 1936494 : int
 val g' = fn : cmd * (int * int * int) -> int * int * int
-val r4 = 1832 : int
-val d4 = 1116059 : int
-val a4 = 1172 : int
-val soln4 = 2044620088 : int
+val r4 = 1962 : int
+val d4 = 1017893 : int
+val a4 = 987 : int
+val soln4 = 1997106066 : int
 -
 rmsteele@Arch:day2$
