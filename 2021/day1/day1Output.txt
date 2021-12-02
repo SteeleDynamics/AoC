@@ -1,0 +1,32 @@
+rmsteele@Arch:day1$ smlnj day1.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day1.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream * string list -> string list
+val f = fn : int option -> int
+val prevCmp = fn : int list -> order list
+val g = fn : order * int -> int
+val input' =
+  [SOME 103,SOME 106,SOME 107,SOME 110,SOME 121,SOME 132,SOME 147,SOME 148,
+   SOME 144,SOME 141,SOME 147,SOME 149,SOME 156,SOME 152,SOME 155,SOME 156,
+   ...] : int option list
+val input =
+  [103,106,107,110,121,132,147,148,144,141,147,149,156,152,155,156,...] :
+  int list
+val cmps1 =
+  [GREATER,GREATER,GREATER,GREATER,GREATER,GREATER,GREATER,LESS,LESS,GREATER,
+   GREATER,GREATER,LESS,GREATER,GREATER,GREATER,...] : order list
+val soln1 = 1696 : int
+val windowSum = fn : int list -> int list
+val sums =
+  [316,323,338,363,400,427,439,433,432,437,452,457,463,463,468,458,...] :
+  int list
+val cmps2 =
+  [GREATER,GREATER,GREATER,GREATER,GREATER,GREATER,LESS,LESS,GREATER,GREATER,
+   GREATER,GREATER,EQUAL,GREATER,LESS,LESS,...] : order list
+val soln2 = 1737 : int
+-
+rmsteele@Arch:day1$
