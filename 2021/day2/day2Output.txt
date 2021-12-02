@@ -1,0 +1,29 @@
+rmsteele@Arch:day2$ smlnj day2.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day2.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+datatype cmd = Down of int | Forward of int | Nil | Up of int
+val readInput = fn : TextIO.instream * string list -> string list
+val mkCmd = fn : string list -> cmd
+val g = fn : cmd * (int * int) -> int * int
+val tokens =
+  [["forward","3"],["down","7"],["forward","8"],["down","9"],["forward","3"],
+   ["down","5"],["down","9"],["down","6"],["forward","1"],["forward","8"],
+   ["forward","9"],["forward","3"],["down","7"],["down","8"],["up","3"],
+   ["down","5"],...] : string list list
+val cmds =
+  [Forward 3,Down 7,Forward 8,Down 9,Forward 3,Down 5,Down 9,Down 6,Forward 1,
+   Forward 8,Forward 9,Forward 3,Down 7,Down 8,Up 3,Down 5,...] : cmd list
+val r3 = 1832 : int
+val d3 = 1172 : int
+val soln3 = 2147104 : int
+val g' = fn : cmd * (int * int * int) -> int * int * int
+val r4 = 1832 : int
+val d4 = 1116059 : int
+val a4 = 1172 : int
+val soln4 = 2044620088 : int
+-
+rmsteele@Arch:day2$
