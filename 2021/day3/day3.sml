@@ -41,7 +41,7 @@ val epsilon = toInt epsilonBits
 val soln5 = gamma * epsilon
 
 (* Advent of Code 2021, Puzzle 6 *)
-fun getMajMin (ws, j, isMaj) =
+fun recurMajMin (ws, j, isMaj) =
   let
     val rowj = List.nth (transpose ws, j)
     val popj = popCount rowj
@@ -52,11 +52,11 @@ fun getMajMin (ws, j, isMaj) =
     case List.filter (fn w => List.nth (w,j) = majMin) ws of
       [] => []
     | [x] => x
-    | xs => getMajMin (xs, j + 1, isMaj)
+    | xs => recurMajMin (xs, j + 1, isMaj)
   end
 
-val oxyBits = getMajMin (ws, 0, true)
-val co2Bits = getMajMin (ws, 0, false)
+val oxyBits = recurMajMin (ws, 0, true)
+val co2Bits = recurMajMin (ws, 0, false)
 val oxy = toInt oxyBits
 val co2 = toInt co2Bits
 val soln6 = oxy * co2
