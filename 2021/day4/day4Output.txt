@@ -1,0 +1,44 @@
+rmsteele@Arch:day4$ smlnj day4.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day4.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val isDelim = fn : char -> bool
+val mkDraw = fn : string -> int
+val mkNum = fn : string -> int * bool
+val mkNumRow = fn : string -> (int * bool) list
+val mkBoards = fn : string list -> (int * bool) list
+val markNum = fn : (int * bool) list * int -> (int * bool) list
+val nthBoard = fn : 'a list * int -> 'a list
+val trBoard = fn : 'a list -> 'a list
+val chkBoardRows = fn : ('a * bool) list -> bool
+val chkBoardCols = fn : ('a * bool) list -> bool
+val chkBoard = fn : ('a * bool) list -> int -> (int * ('a * bool) list) option
+val playBingo = fn :
+  int list * (int * bool) list * (int * int) list -> (int * int) list
+val drawStr =
+  "28,82,77,88,95,55,62,21,99,14,30,9,97,92,94,3,60,22,18,86,78,71,61,43,#" :
+  string
+val boardsStr =
+  ["31 88 71 23 61\n"," 4  9 14 93 51\n","52 50  6 34 55\n",
+   "70 64 78 65 95\n","12 22 41 60 57\n","44 54 26 63 18\n",
+   "32 74 99 52  2\n"," 5 29 13 28 41\n","60 69 53 61 25\n",
+   "49 59 70 46 48\n","26 91  1 23  6\n","51 58 79 57 33\n",
+   "67 50 14 81 48\n","64 66 49 46  9\n","16 73 39 74 68\n",
+   "41 31 12 14 82\n",...] : string list
+val draws = [28,82,77,88,95,55,62,21,99,14,30,9,97,92,94,3,...] : int list
+val boards =
+  [(31,false),(88,false),(71,false),(23,false),(61,false),(4,false),(9,false),
+   (14,false),(93,false),(51,false),(52,false),(50,false),(6,false),
+   (34,false),(55,false),(70,false),...] : (int * bool) list
+val rank =
+  [(43,51034),(3,0),(60,66661),(0,27360),(37,42180),(95,33801),(58,28800),
+   (77,32130),(47,24656),(83,40434),(19,43160),(2,27456),(17,26871),
+   (26,19890),(39,21099),(96,21060),...] : (int * int) list
+val soln7 = (43,51034) : int * int
+val soln8 = (21,5434) : int * int
+-
+rmsteele@Arch:day4$
