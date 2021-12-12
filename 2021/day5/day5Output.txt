@@ -1,0 +1,48 @@
+rmsteele@Arch:day5$ smlnj day5.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day5.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val isDelim = fn : char -> bool
+val mkPoint = fn : string * string -> (int * int) option
+val mkLine = fn : string list -> (int * int) * (int * int)
+val isHorz = fn : ('a * int) * ('b * int) -> bool
+val isVert = fn : (int * 'a) * (int * 'b) -> bool
+val genPoints = fn : (int * int) * (int * int) -> (int * int) list
+val gatherPoints = fn : ((int * int) * (int * int)) list -> (int * int) list
+val markTbl = fn : (int * int) list -> unit
+val foldTbl = fn : (int * 'a -> 'a) -> 'a -> 'a
+val resetTbl = fn : unit -> unit
+val tokens =
+  [["105","697","->","287","697"],["705","62","->","517","250"],
+   ["531","627","->","531","730"],["21","268","->","417","268"],
+   ["913","731","->","271","89"],["214","697","->","82","697"],
+   ["376","661","->","376","177"],["519","859","->","977","859"],
+   ["782","98","->","184","98"],["612","179","->","515","179"],
+   ["340","772","->","352","784"],["111","863","->","111","298"],
+   ["944","73","->","594","73"],["465","21","->","970","21"],
+   ["122","592","->","111","592"],["975","975","->","16","16"],...] :
+  string list list
+val lines =
+  [((105,697),(287,697)),((705,62),(517,250)),((531,627),(531,730)),
+   ((21,268),(417,268)),((913,731),(271,89)),((214,697),(82,697)),
+   ((376,661),(376,177)),((519,859),(977,859)),((782,98),(184,98)),
+   ((612,179),(515,179)),((340,772),(352,784)),((111,863),(111,298)),
+   ((944,73),(594,73)),((465,21),(970,21)),((122,592),(111,592)),
+   ((975,975),(16,16)),...] : ((int * int) * (int * int)) list
+val points =
+  [(105,697),(106,697),(107,697),(108,697),(109,697),(110,697),(111,697),
+   (112,697),(113,697),(114,697),(115,697),(116,697),(117,697),(118,697),
+   (119,697),(120,697),...] : (int * int) list
+val f = fn : int * int -> int
+val soln9 = 7414 : int
+val points' =
+  [(105,697),(106,697),(107,697),(108,697),(109,697),(110,697),(111,697),
+   (112,697),(113,697),(114,697),(115,697),(116,697),(117,697),(118,697),
+   (119,697),(120,697),...] : (int * int) list
+val soln10 = 19676 : int
+-
+rmsteele@Arch:day5$
