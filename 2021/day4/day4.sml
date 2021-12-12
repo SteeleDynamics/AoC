@@ -7,7 +7,7 @@ fun readInput inStream =
 
 fun isDelim #"\n" = true
   | isDelim #"," = true
-  | isDelim _ = false 
+  | isDelim _ = false
 
 fun mkDraw tok =
   case Int.fromString tok of
@@ -22,12 +22,12 @@ fun mkNum tok =
 fun mkNumRow rstr = List.map mkNum (String.tokens Char.isSpace rstr)
 
 fun mkBoards boardsStr =
-  List.foldr 
-    (fn (r, acc1) => 
-      List.foldr 
+  List.foldr
+    (fn (r, acc1) =>
+      List.foldr
         (fn (c, acc2) => c :: acc2)
         acc1
-        (mkNumRow r)) 
+        (mkNumRow r))
     []
     boardsStr
 
@@ -62,7 +62,7 @@ fun playBingo ([], boards, acc) = acc
   let
     val boards' = markNum (boards, draw)
     val results = List.tabulate (List.length boards' div 25, chkBoard boards')
-    val results' = 
+    val results' =
       List.filter
         (fn (SOME (i, board)) => not (List.exists (fn (j, score) => i = j) acc)
           | NONE => false)
