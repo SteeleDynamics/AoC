@@ -1,0 +1,30 @@
+rmsteele@Arch:day6$ smlnj day6.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day6.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val isDelim = fn : char -> bool
+val rmOpt = fn : 'a option -> 'a
+val shl = fn : int list -> int list
+val sub = fn : 'a list * int -> 'a
+val update = fn : 'a list * int * 'a -> 'a list
+val addi = fn : int list * int * int -> int list
+val hist = fn : int list * int list -> int list
+val iterate = fn : int list -> int list
+val simulate = fn : int list * int -> int list
+val inputStr =
+  "1,3,1,5,5,1,1,1,5,1,1,1,3,1,1,4,3,1,1,2,2,4,2,1,3,3,2,4,4,4,1,3,1,1,4,#" :
+  string
+val xs = [1,3,1,5,5,1,1,1,5,1,1,1,3,1,1,4,...] : int list
+val pop = [0,110,50,49,43,48,0,0,0] : int list
+val pop80 = [23705,46361,30546,49188,43190,46354,62153,22169,36602] : int list
+val soln11 = 360268 : int
+val pop256 =
+  [141965265398,166590764897,174188334072,191462221137,214883894685,
+   220844404986,261049733948,118663754646,142497810133] : int list
+val soln12 = 1632146183902 : int
+-
+rmsteele@Arch:day6$
