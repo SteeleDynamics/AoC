@@ -1,0 +1,27 @@
+rmsteele@Arch:day7$ smlnj day7.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day7.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val isDelim = fn : char -> bool
+val rmOpt = fn : 'a option -> 'a
+val inputStr =
+  "1101,1,29,67,1102,0,1,65,1008,65,35,66,1005,66,28,1,67,65,20,4,0,1001,#" :
+  string
+val xs = [1101,1,29,67,1102,0,1,65,1008,65,35,66,1005,66,28,1,...] : int list
+val split = fn : int list -> int list * int list
+val merge = fn : int list * int list -> int list
+val msort = fn : int list -> int list
+val median = fn : int list -> int
+val xTilde = 372 : int
+val soln13 = 337488 : int
+val mean = fn : int list -> int
+val gauss = fn : int -> int
+val fuel = fn : int -> int -> int
+val xBar = 480 : int
+val soln14 = 89647695 : int
+-
+rmsteele@Arch:day7$
