@@ -1,0 +1,105 @@
+rmsteele@Arch:day8$ smlnj day8.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day8.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val parse = fn : string list -> string list * string list
+val entries =
+  [(["bgeacd","dbfag","bcadegf","agdce","dgfbce","bgc","bdgca","aedcgf","bc",
+     "abec"],["gcdfbe","cbea","bc","gbc"]),
+   (["bdeag","gdbaec","cd","dgc","abcfg","ebcd","dgfabe","cdfeag","cgadb",
+     "bdagfce"],["becd","acfgde","bgcaed","eadgbc"]),
+   (["acbfg","bcf","ebacg","fb","fcbgea","cbdfge","cgeabd","agcfd","aebf",
+     "bdaefgc"],["fbcdeg","cfb","ebgca","bf"]),
+   (["bfcde","dfgb","gecbdf","fdc","fdcega","fd","ebdca","gfcaedb","gcfbe",
+     "cbagef"],["dbfec","gbfd","bcdfe","dfc"]),
+   (["dbgeaf","bad","acdfbe","ab","agbdf","bgcdf","fdgae","fcgbdea","fgecda",
+     "egab"],["ba","dab","abd","gbae"]),
+   (["feagcb","cdfagb","egda","bdg","dg","fdcagbe","ebcga","bedfc","bgecd",
+     "dbcgea"],["eafgbc","bcdfage","dg","egad"]),
+   (["bacfedg","afbgc","dbcgaf","afgecd","acd","bfagce","bgda","ad","adfbc",
+     "ecbdf"],["dca","dca","abdg","dcbef"]),
+   (["eagfb","efcdba","faceg","gfdce","cea","afbcegd","ac","afdegb","gafcbe",
+     "gbac"],["fegcd","geafc","edbcaf","bcag"]),
+   (["cfb","bgfce","ebgdf","fc","gdfeab","acdbfeg","cgeab","ecfd","badfcg",
+     "ebcfgd"],["ecgab","eagcb","efbacdg","fc"]),
+   (["adfec","ebdcgf","bfced","bec","fagcdeb","gbcd","cb","fbgde","deagbf",
+     "afecgb"],["bce","cb","fdgeb","bc"]),
+   (["bgfaec","dcfga","ed","acedgfb","fdebgc","dec","fdeb","gedcba","gfced",
+     "cebfg"],["cde","agcbde","gfaecb","cde"]),
+   (["bgefc","cfgbea","dfgaecb","dg","dbcg","dcefa","dfbegc","dgfce","afgedb",
+     "fgd"],["cfged","gdf","fbgdea","gafecb"]),
+   (["fcbade","dagbe","gacb","gaedfc","bdaecfg","bgfde","dbaec","baegcd","ga",
+     "dga"],["ag","gad","gcab","ga"]),
+   (["cfgdeb","cbfade","fac","badfc","ca","gafdce","gfdebac","bfadg","fbdce",
+     "aceb"],["ebdcf","deagfc","ac","ebfcd"]),
+   (["debfcg","fgde","cfaedgb","ecbag","cbeadf","gf","gbf","fdceb","fcebg",
+     "dfagbc"],["gbfec","gf","agbce","bfcagd"]),
+   (["fdcebag","cbeagd","gafed","dfbgc","cgedfa","beg","be","edgafb","edbfg",
+     "eabf"],["gbcfd","acgefd","cfdageb","afged"]),...] :
+  (string list * string list) list
+val g = fn : string * int -> int
+val f = fn : ('a * string list) * int -> int
+val soln15 = 352 : int
+signature EQ = sig
+  type t
+  val equal : t * t -> bool
+  val toString : t -> string
+end
+signature SET =
+  sig
+  structure Elt :
+    sig
+      type t
+      val equal : t * t -> bool
+      val toString : t -> string
+    end
+  type t
+  val empty : t
+  val singleton : Elt.t -> t
+  val size : t -> int
+  val toString : t -> string
+  val toList : t -> Elt.t list
+  val insert : t -> Elt.t -> t
+  val remove : t -> Elt.t -> t
+  val member : t -> Elt.t -> bool
+  val union : t * t -> t
+  val intersection : t * t -> t
+  val difference : t * t -> t
+end
+functor MkSet(Elt: sig
+  type t
+  val equal : t * t -> bool
+  val toString : t -> string
+end) :
+sig
+  structure Elt : <sig>
+  type t
+  val empty : t
+  val singleton : Elt.t -> t
+  val size : t -> int
+  val toString : t -> string
+  val toList : t -> Elt.t list
+  val insert : t -> Elt.t -> t
+  val remove : t -> Elt.t -> t
+  val member : t -> Elt.t -> bool
+  val union : t * t -> t
+  val intersection : t * t -> t
+  val difference : t * t -> t
+end
+structure CharElt : EQ
+structure CharSet : SET?
+val charsToSet = fn : CharSet.Elt.t list * CharSet.t -> CharSet.t
+val strToSet = fn : string -> CharSet.t
+val listToString' = fn : ('a -> string) -> 'a list -> string
+val listToString = fn : ('a -> string) -> 'a list -> string
+val mapPair = fn : ('a -> 'b) -> 'a * 'a -> 'b * 'b
+val charSetEqual = fn : CharSet.t * CharSet.t -> bool
+val getElt = fn : CharSet.t -> CharSet.Elt.t
+val getOutputVal = fn : string list * string list -> int
+val soln16 = 936117 : int
+-
+rmsteele@Arch:day8$
