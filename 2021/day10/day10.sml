@@ -68,7 +68,7 @@ fun autoScore (RightRound, acc) = 5 * acc + 1
   | autoScore (RightSquare, acc) = 5 * acc + 2
   | autoScore (RightCurly, acc) = 5 * acc + 3
   | autoScore (RightAngle, acc) = 5 * acc + 4
-  | autoScore _ = raise Fail "autoCompScoreAcc Error"
+  | autoScore _ = raise Fail "autoScore Error"
 
 fun autoCompScore (Incomplete stack) = List.foldl autoScore 0 (mkAuto stack)
   | autoCompScore _ = 0
