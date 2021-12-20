@@ -8,28 +8,28 @@ fun readInput inStream =
 (* charToInt : char -> int *)
 fun charToInt c = Char.ord c - Char.ord #"0"
 
-(* getTop : 'a Array2.array * int * int -> (int * int * 'a) option *)
-fun getTop (arr, i, j) =
+(* getTop : 'a Array2.array * int * int -> 'a option *)
+fun getTop (G, i, j) =
   case Int.compare (i, 0) of
     (LESS | EQUAL) => NONE
-  | GREATER => SOME (i, j, Array2.sub (arr, i - 1, j))
+  | GREATER => SOME (Array2.sub (G, i - 1, j))
 
-(* getBottom : 'a Array2.array * int * int -> (int * int * 'a) option *)
-fun getBottom (arr, i, j) =
-  case Int.compare (i, (Array2.nRows arr) - 1) of
-    LESS => SOME (i, j, Array2.sub (arr, i + 1, j))
+(* getBottom : 'a Array2.array * int * int -> 'a option *)
+fun getBottom (G, i, j) =
+  case Int.compare (i, (Array2.nRows G) - 1) of
+    LESS => SOME (Array2.sub (G, i + 1, j))
   | (EQUAL | GREATER) => NONE
 
-(* getLeft : 'a Array2.array * int * int -> (int * int * 'a) option *)
-fun getLeft (arr, i, j) =
+(* getLeft : 'a Array2.array * int * int -> 'a option *)
+fun getLeft (G, i, j) =
   case Int.compare (j, 0) of
     (LESS | EQUAL) => NONE
-  | GREATER => SOME (i, j, Array2.sub (arr, i, j - 1))
+  | GREATER => SOME (Array2.sub (G, i, j - 1))
 
-(* getRight : 'a Array2.array * int * int -> (int * int * 'a) option *)
-fun getRight (arr, i, j) =
-  case Int.compare (j, (Array2.nCols arr) - 1) of
-    LESS => SOME (i, j, Array2.sub (arr, i, j + 1))
+(* getRight : 'a Array2.array * int * int -> 'a option *)
+fun getRight (G, i, j) =
+  case Int.compare (j, (Array2.nCols G) - 1) of
+    LESS => SOME (Array2.sub (G, i, j + 1))
   | (EQUAL | GREATER) => NONE
 
 (* isSome : 'a option -> bool *)
@@ -41,41 +41,104 @@ fun rmSome (SOME x) = x
   | rmSome (NONE) = raise Fail "rmSome Error"
 
 (* getNeighbors : 'a Array2.array * int * int -> 'a list *)
-fun getNeighbors (arr, i, j) =
+fun getNeighbors (G, i, j) =
   ((List.map rmSome) o (List.filter isSome))
-  [getTop(arr,i,j), getBottom(arr,i,j), getLeft(arr,i,j), getRight(arr,i,j)]
+  [getTop(G,i,j), getBottom(G,i,j), getLeft(G,i,j), getRight(G,i,j)]
 
-(* relMinAcc : int Array2.array -> int * int * int * int list -> int list *)
-fun relMinAcc arr (i, j, aij, acc) =
-  if foldl (fn ((x,y,v),a) => aij < v andalso a) true (getNeighbors (arr,i,j))
-  then acc @ [(i,j,aij)]
+datatype bfs_color = White | Gray | Black
+type vertex = int * int * int * bfs_color * int option
+
+(* relMinAcc : vertex Array2.array -> vertex * vertex list -> vertex list *)
+fun relMinAcc G (u as (i,j,k,l,m), acc) =
+  if foldl (fn ((v,w,x,y,z),a) => k < x andalso a) true (getNeighbors (G,i,j))
+  then acc @ [u]
   else acc
 
+(* make int Array2.array *)
 val arr =
   Array2.fromList
     (List.map
       ((List.map charToInt) o (List.filter Char.isDigit) o String.explode)
       (readInput (TextIO.openIn "day9Input.txt")))
 
-val relMins = Array2.foldi Array2.RowMajor (relMinAcc arr) []
-              {base=arr, row=0, col=0, nrows=NONE, ncols=NONE}
+val mkVertex = fn (i, j) => (i,j,Array2.sub(arr,i,j),White,NONE : int option)
+val G = Array2.tabulate Array2.RowMajor (100, 100, mkVertex)
 
-val soln17 = foldl (op +) 0 (List.map (fn (_, _, x) => x + 1) relMins)
+val relMins = Array2.fold Array2.RowMajor (relMinAcc G) [] G
+
+val soln17 = foldl (op +) 0 (List.map (fn (_,_,x,_,_) => x + 1) relMins)
 
 (* Advent of Code 2021, Puzzle 18 *)
-fun fillBasin (arr, n, i, j) =
-  case (Array2.sub (arr, i, j)) of
-    (_, SOME k) => ()
-  | (9, NONE) => ()
-  | (aij, NONE) =>
-    let
-     val f = fn ((x, y, _), acc) => fillBasin (arr, n, x, y)
-    in
-      (Array2.update (arr, i, j, (aij, SOME n));
-      foldl f () (getNeighbors (arr, i, j)))
-    end
+signature QUEUE =
+sig
+  type 'a queue
+  val emp : 'a queue
+  val ins : 'a * 'a queue -> 'a queue
+  val rem : 'a queue -> ('a * 'a queue) option
+end
 
-val tabf = fn (i, j) => (Array2.sub (arr, i, j), NONE : int option)
-val arr' = Array2.tabulate Array2.RowMajor (100, 100, tabf)
-val (i0, j0, _) = List.hd relMins
-val () = fillBasin (arr', 0, i0, j0)
+structure Queue : QUEUE =
+struct
+  type 'a queue = ('a list) * ('a list)
+
+  val emp = ([], [])
+
+  fun ins (n, (front, back)) = (front, n::back)
+
+  fun rem (  [] ,  [] ) = NONE
+    | rem (y::ys, back) = SOME (y,(ys,back))
+    | rem (  [] , back) = rem (List.rev back,[])
+end
+
+val whiteSq = "\^[[0;47m \^[[0;49m"   (* ASCII CSI with ANSI colors *)
+val middleDot = "\194\183"            (* UTF-16 u00b7 ==> UTF-8 c2 b7 bytes *)
+
+fun vertexToEscStr (i, j, aij, bij, NONE) = middleDot
+  | vertexToEscStr (i, j, aij, bij, SOME b) = Int.toString b
+
+fun graphToEscStr f G =
+  Array2.fold
+    Array2.RowMajor
+    (fn (x as (i,j,aij,bij,cij), acc) =>
+      case Int.compare (j, Array2.nCols G - 1) of
+        EQUAL => acc ^ f x ^ "\n"
+      | (LESS | GREATER) => acc ^ f x)
+    ""
+    G
+
+fun graphDisp G = print (graphToEscStr vertexToEscStr G)
+
+fun BFS (G, n, i, j) =
+  let
+    val (_, _, aij, _, _) = Array2.sub (G, i, j)
+    val Q = (Array2.update (G, i, j, (i, j, aij, Gray, SOME n));
+            Queue.ins (Array2.sub (G, i, j), Queue.emp))
+    fun impl (NONE) = ()
+      | impl (SOME (u as (x, y, axy, bxy, cxy), Q')) =
+        let
+          (* filter out 9's and Gray/Black vertices *)
+          val pred = fn (_, _, 9, _, _) => false
+                      | (_, _, _, White, _) => true
+                      | _ => false
+
+          (* mark vertices as Gray and add basin number n *)
+          val mark = fn ((x, y, axy, bxy, cxy), acc) =>
+                        Array2.update (G, x, y, (x, y, axy, Gray, SOME n))
+
+          (* insert vertices into accumulator Queue  *)
+          val insv = fn ((x, y, axy, bxy, cxy), acc) =>
+                        Queue.ins (Array2.sub (G, x, y), acc)
+
+          (* filter, mark, then insert vertices *)
+          val vs = List.filter pred (getNeighbors (G, x, y))
+          val Q'' = (List.foldl mark () vs;
+                    List.foldl insv Q' vs)
+        in
+          (* update color of current vertex u to Black, then loop *)
+          (Array2.update (G, x, y, (x, y, axy, Black, cxy));
+          impl (Queue.rem Q''))
+        end
+  in
+    (* start BFS with singleton queue *)
+    impl (Queue.rem Q)
+  end
