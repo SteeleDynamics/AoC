@@ -90,11 +90,11 @@ struct
     | rem (  [] , back) = rem (List.rev back,[])
 end
 
-val whiteSq = "\^[[0;47m \^[[0;49m"   (* ASCII CSI with ANSI colors *)
-val middleDot = "\194\183"            (* UTF-16 u00b7 ==> UTF-8 c2 b7 bytes *)
+val fullBlock = "\226\150\136"        (* UTF16 u2588 ==> UTF8 e2 96 88 bytes *)
+val middleDot = "\194\183"            (* UTF16 u00b7 ==> UTF8 c2 b7 bytes *)
 
-fun vertexToEscStr (i, j, aij, bij, NONE) = middleDot
-  | vertexToEscStr (i, j, aij, bij, SOME b) = Int.toString b
+fun vertexToEscStr (i, j, aij, bij, NONE) = fullBlock
+  | vertexToEscStr (i, j, aij, bij, SOME b) = middleDot
 
 fun graphToEscStr f G =
   Array2.fold
