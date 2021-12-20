@@ -64,11 +64,13 @@ val arr =
 val mkVertex = fn (i, j) => (i,j,Array2.sub(arr,i,j),White,NONE : int option)
 val G = Array2.tabulate Array2.RowMajor (100, 100, mkVertex)
 
-val relMins = Array2.fold Array2.RowMajor (relMinAcc G) [] G
+val rmins = Array2.fold Array2.RowMajor (relMinAcc G) [] G
 
-val soln17 = foldl (op +) 0 (List.map (fn (_,_,x,_,_) => x + 1) relMins)
+val soln17 = foldl (op +) 0 (List.map (fn (_,_,x,_,_) => x + 1) rmins)
 
 (* Advent of Code 2021, Puzzle 18 *)
+
+(* QUEUE signature *)
 signature QUEUE =
 sig
   type 'a queue
@@ -77,6 +79,7 @@ sig
   val rem : 'a queue -> ('a * 'a queue) option
 end
 
+(* Queue : QUEUE structure *)
 structure Queue : QUEUE =
 struct
   type 'a queue = ('a list) * ('a list)
@@ -90,12 +93,49 @@ struct
     | rem (  [] , back) = rem (List.rev back,[])
 end
 
-val fullBlock = "\226\150\136"        (* UTF16 u2588 ==> UTF8 e2 96 88 bytes *)
-val middleDot = "\194\183"            (* UTF16 u00b7 ==> UTF8 c2 b7 bytes *)
+(* split : int list -> int list * int list
+ * REQUIRES: true
+ * ENSURES: split L evaluates to (A,B) where A and B differ in length by at most
+ *          one, and A @ B is a permutation of L
+ *)
+fun split ([] : int list) : int list * int list = ([], [])
+  | split [x] = ([x], [])
+  | split (x::x'::xs) =
+    let val (A, B) = split xs
+    in (x::A, x'::B)
+    end
 
+(* merge : int list * int list -> int list
+ * REQUIRES: A and B are sorted
+ * ENSURES: merge (A,B) evaluates to a sorted permutation of A @ B
+ *)
+fun merge (L1 : int list, [] : int list) : int list = L1
+  | merge ([], L2) = L2
+  | merge (x::xs, y::ys) =
+     (case Int.compare(x,y) of
+        GREATER => y :: merge (x::xs, ys)
+      | _ => x :: merge (xs, y::ys))
+
+(* msort : int list -> int list
+ * REQUIRES: true
+ * ENSURES: msort ( L ) evaluates to a sorted permutation of L
+ *)
+fun msort([] : int list) : int list = []
+  | msort [x] = [x]
+  | msort L =
+    let val (A,B) = split L
+    in merge(msort A, msort B)
+    end
+
+(* escaped byte strings of utf-8 chars for graph display *)
+val fullBlock = "\226\150\136"        (* u2588 ==> e2 96 88 bytes *)
+val middleDot = "\194\183"            (* u00b7 ==> c2 b7 bytes *)
+
+(* vertexToEscStr : vertex -> string *)
 fun vertexToEscStr (i, j, aij, bij, NONE) = fullBlock
   | vertexToEscStr (i, j, aij, bij, SOME b) = middleDot
 
+(* graphToEscStr : (vertex -> string) -> vertex Array2.array -> string *)
 fun graphToEscStr f G =
   Array2.fold
     Array2.RowMajor
@@ -106,8 +146,10 @@ fun graphToEscStr f G =
     ""
     G
 
+(* graphDisp : vertex Array2.array -> unit *)
 fun graphDisp G = print (graphToEscStr vertexToEscStr G)
 
+(* BFS : vertex Array2.array * 'a * int * int -> unit *)
 fun BFS (G, n, i, j) =
   let
     val (_, _, aij, _, _) = Array2.sub (G, i, j)
@@ -142,3 +184,29 @@ fun BFS (G, n, i, j) =
     (* start BFS with singleton queue *)
     impl (Queue.rem Q)
   end
+
+(* markBasin : vertex Array2.array -> ('a * vertex) * 'b -> 'b *)
+fun markBasin G ((n, (i, j, aij, bij, cij)), acc) = BFS (G, n, i, j)
+
+(* sizeBasin : vertex Array2.array -> ('a * vertex) * 'b -> 'b *)
+fun sizeBasin G ((n, v), acc) =
+    acc @
+      [Array2.fold
+        Array2.RowMajor
+        (fn ((_, _, _, _, SOME k), acc') => if k = n then acc' + 1 else acc'
+          | ((_, _, _, _, NONE), acc') => acc')
+        0
+        G]
+
+(* enumerate list of relative minimums *)
+val basins = ListPair.zip (List.tabulate (List.length rmins, fn x => x), rmins)
+
+(* mark all basins then get sizes in reversed sorted order *)
+val sizes = (List.foldl (markBasin G) () basins;
+            rev (msort (List.foldl (sizeBasin G) [] basins)))
+
+(* get three largest basin sizes *)
+val b1 :: b2 :: b3 :: _ = sizes
+
+(* calulate soln *)
+val soln18 = b1 * b2 * b3

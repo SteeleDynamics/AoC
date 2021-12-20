@@ -1,0 +1,76 @@
+rmsteele@Arch:day9$ smlnj day9.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day9.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val charToInt = fn : char -> int
+val getTop = fn : 'a Array2.array * int * int -> 'a option
+val getBottom = fn : 'a Array2.array * int * int -> 'a option
+val getLeft = fn : 'a Array2.array * int * int -> 'a option
+val getRight = fn : 'a Array2.array * int * int -> 'a option
+val isSome = fn : 'a option -> bool
+val rmSome = fn : 'a option -> 'a
+val getNeighbors = fn : 'a Array2.array * int * int -> 'a list
+datatype bfs_color = Black | Gray | White
+type vertex = int * int * int * bfs_color * int option
+val relMinAcc = fn :
+  ('a * 'b * int * 'c * 'd) Array2.array
+   -> (int * int * int * 'e * 'f) * (int * int * int * 'e * 'f) list
+   -> (int * int * int * 'e * 'f) list
+val arr = - : int Array2.array
+val mkVertex = fn : int * int -> int * int * int * bfs_color * int option
+val G = - : (int * int * int * bfs_color * int option) Array2.array
+val rmins =
+  [(0,11,4,White,NONE),(0,34,1,White,NONE),(0,69,2,White,NONE),
+   (0,76,3,White,NONE),(0,84,0,White,NONE),(0,92,3,White,NONE),
+   (1,19,1,White,NONE),(1,30,3,White,NONE),(1,56,0,White,NONE),
+   (2,42,0,White,NONE),(2,98,0,White,NONE),(3,90,3,White,NONE),
+   (4,3,0,White,NONE),(4,26,2,White,NONE),(4,63,0,White,NONE),
+   (5,49,3,White,NONE),...] : (int * int * int * bfs_color * int option) list
+val soln17 = 535 : int
+signature QUEUE =
+  sig
+  type 'a queue
+  val emp : 'a queue
+  val ins : 'a * 'a queue -> 'a queue
+  val rem : 'a queue -> ('a * 'a queue) option
+end
+structure Queue : QUEUE
+val split = fn : int list -> int list * int list
+val merge = fn : int list * int list -> int list
+val msort = fn : int list -> int list
+val fullBlock = "\226\150\136" : string
+val middleDot = "\194\183" : string
+val vertexToEscStr = fn : 'a * 'b * 'c * 'd * 'e option -> string
+val graphToEscStr = fn :
+  ('a * int * 'b * 'c * 'd -> string)
+   -> ('a * int * 'b * 'c * 'd) Array2.array -> string
+val graphDisp = fn : ('a * int * 'b * 'c * 'd option) Array2.array -> unit
+val BFS = fn :
+  (int * int * int * bfs_color * 'a option) Array2.array * 'a * int * int
+   -> unit
+val markBasin = fn :
+  (int * int * int * bfs_color * 'a option) Array2.array
+   -> ('a * (int * int * 'b * 'c * 'd)) * 'e -> unit
+val sizeBasin = fn :
+  ('a * 'b * 'c * 'd * ''e option) Array2.array
+   -> (''e * 'f) * int list -> int list
+val basins =
+  [(0,(0,11,4,White,NONE)),(1,(0,34,1,White,NONE)),(2,(0,69,2,White,NONE)),
+   (3,(0,76,3,White,NONE)),(4,(0,84,0,White,NONE)),(5,(0,92,3,White,NONE)),
+   (6,(1,19,1,White,NONE)),(7,(1,30,3,White,NONE)),(8,(1,56,0,White,NONE)),
+   (9,(2,42,0,White,NONE)),(10,(2,98,0,White,NONE)),(11,(3,90,3,White,NONE)),
+   (12,(4,3,0,White,NONE)),(13,(4,26,2,White,NONE)),(14,(4,63,0,White,NONE)),
+   (15,(5,49,3,White,NONE)),...] :
+  (int * (int * int * int * bfs_color * int option)) list
+val sizes = [109,103,100,98,98,94,93,92,90,84,84,82,81,81,78,76,...] :
+  int list
+val b1 = 109 : int
+val b2 = 103 : int
+val b3 = 100 : int
+val soln18 = 1122700 : int
+-
+rmsteele@Arch:day9$
