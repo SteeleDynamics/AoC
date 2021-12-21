@@ -1,0 +1,28 @@
+rmsteele@Arch:day11$ smlnj day11.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day11.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val charToInt = fn : char -> int
+val sub = fn : 'a list * int * int -> 'a
+val update = fn : 'a list * int * int * 'a -> 'a list
+val enum = fn : 'a list -> (int * 'a) list
+val toIndex = fn : int -> int * int
+val disp = fn : int list -> unit
+val incr = fn : int list -> int list
+infix ?
+val ? = fn : int * int -> order
+val neighbors = fn : int * int -> (int * int) list
+val fst = fn : 'a * 'b -> 'a
+val flash = fn : int list * int list -> int list * int list
+val step = fn : int list -> int list * int
+val iterate = fn : int list * int * int -> int
+val arr = [6,1,1,1,8,2,1,7,6,7,1,7,6,3,6,1,...] : int list
+val soln21 = 1793 : int
+val iterate' = fn : int list * int -> int
+val soln22 = 247 : int
+-
+rmsteele@Arch:day11$
