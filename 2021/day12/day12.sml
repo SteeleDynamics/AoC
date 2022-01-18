@@ -46,7 +46,7 @@ val input =
     (mkEdge o (String.tokens delim))
     (readInput (TextIO.openIn "day12Input.txt"))
 
-(* Adj : (Dict.Key.ord_key * Dict.Key.ord_key list) list *)
-val Adj = Dict.listItemsi (foldl ins Dict.empty input)
+(* Adj : Dict.Key.ord_key list Dict.map *)
+val Adj = foldl ins Dict.empty input
 
 (* Advent of Code 2021, Puzzle 22 *)
