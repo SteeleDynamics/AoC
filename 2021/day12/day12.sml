@@ -46,13 +46,10 @@ fun ins ((u,v), D) =
 val input =
   List.map
     (mkEdge o (String.tokens delim))
-    (readInput (TextIO.openIn "day12Input.txt"))
+    (readInput (TextIO.openIn "day12test1.txt"))
 
 (* Adj : Dict.Key.ord_key list Dict.map *)
 val Adj = foldl ins Dict.empty input
-
-(* ids : Dict.Key.ord_key list *)
-val ids = Dict.listKeys Adj
 
 (* isSmall : string -> bool *)
 fun isSmall k =
@@ -61,69 +58,45 @@ fun isSmall k =
   in impl (String.explode k)
   end
 
-(* signature VERTEX for DFS *)
-signature VERTEX =
-sig
-  type vertex_ids
-  type vertex_color
-  type t
+fun memberOf (L, e) =
+  let val p = fn x => case String.compare (x, e) of EQUAL => true | _ => false
+  in List.exists p L
+  end
 
-  (* constructors *)
-  val init : t
-  val setColor : t * vertex_color -> t
-  val setPreds : t * vertex_ids -> t
-
-  (* destructors *)
-  val getColor : t -> vertex_color
-  val getPreds : t -> vertex_ids
-end
-
-(* structure Vertex :> VERTEX *)
-structure Vertex : VERTEX =
-struct
-  type vertex_ids = Dict.Key.ord_key list          (* multiple predecessors *)
-  datatype vertex_color = White | Gray | Black
-  type t = vertex_color * vertex_ids               (* (color, pis) *)
-
-  val init = (White, [])
-  fun setColor ((color, pis), color') = (color', pis)
-  fun setPreds ((color, pis), pis') = (color, pis')
-
-  fun getColor (color, pis) = color
-  fun getPreds (color, pis) = pis
-end
-
-(* V : Vertex.t Dict.map *)
-val V = foldl (fn (k,D) => Dict.insert (D, k, Vertex.init)) Dict.empty ids
-
-(* mkPath : Vertex.t Dict.map * Dict.Key.ord_key * Dict.Key.ord_key
- *          Dict.Key.ord_key list -> Dict.Key.ord_key list
+(* findOnePath : Dict.Key.ord_key -> string -> Dict.Key.ord_key list Dict.map
+ *               -> Dict.Key.ord_key list -> string list -> (string list -> 'a)
+ *               -> (unit -> 'a) -> 'a
+ * REQUIRES: G is a graph such that
+ *           - s and f are vertices in G
+ *           - Adj is the adjacency list representation of G
+ *           - us are current vertices adjacent to s (obtained from Adj)
+ *           - visited are current small vertices/caves visited
+ * ENSURES:  findOnePath s f Adj us visited sc fc  ==> sc p such that
+ *           - p : string list that represents a path from s to f
+ *           - along p, big vertices/caves can be visited multiple times
+ *           - along p, small vertices/caves can be visited at most one time
  *)
-fun mkPath (V, s, v, acc) =
-  case (v = s, Vertex.getPreds (Dict.lookup (V, v))) of
-    (true , _        ) => s :: acc
-  | (false, []       ) => raise Fail "mkPath Error"
-  | (false, pi :: pis) =>
-    let val vertex_v = Dict.lookup (V, v)
-        val vertex_v' = Vertex.setPreds (vertex_v, pis)
-        val V' = Dict.insert (V, v, vertex_v')
-    in mkPath (V', s, pi, v :: acc)
+fun findOnePath s f Adj us visited sc fc =
+  case (s = f, isSmall s, memberOf (visited, s), us) of
+    (true , _    , _    , _      ) => sc (f :: [])
+  | (false, _    , _    , []     ) => fc ()
+  | (false, false, _    , v :: vs) =>
+    let val ws = Dict.lookup (Adj, v)
+    in findOnePath v f Adj ws visited (fn r1 => sc (s :: r1)) (fn () =>
+         findOnePath s f Adj vs visited (fn r2 => sc (s :: r2)) fc)
+    end
+  | (false, true , true , v :: vs) => fc ()
+  | (false, true , false, v :: vs) =>
+    let val ws = Dict.lookup (Adj, v)
+    in findOnePath v f Adj ws (s :: visited) (fn r1 => sc (s :: r1)) (fn () =>
+         findOnePath s f Adj vs (s :: visited) (fn r2 => sc (s :: r2)) fc)
     end
 
-(* DFS : Vertex.t Dict.map * Dict.Key.ord_key list Dict.map *
- *       Vertex.vertex_id * Vertex.vertex_id -> Vertex.vertex_id list list
- * REQUIRES: let K be the set of all vertex_ids (keys)
- *           V and Adj have domain K
- *           s and f are elements of K
- * ENSURES:  DFS (V, Adj, s, f) ==> list of all paths such that s ~~> f, small
- *             caves are only visited once, and large caves can be visited
- *             multiple times
- *)
-fun DFS (V, Adj, s, f) =
-  let
-    fun DFS_Visit (V, Adj, u, acc) = raise Fail "Unimplemented"
-  in
-    raise Fail "Unimplemented"
-  end
+val s = "start"
+val f = "end"
+val us = Dict.lookup (Adj, s)
+val sc = SOME
+val fc = fn () => NONE
+val path = findOnePath s f Adj us [] sc fc
 
 (* Advent of Code 2021, Puzzle 22 *)
