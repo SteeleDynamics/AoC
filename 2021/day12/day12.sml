@@ -42,22 +42,60 @@ fun ins ((u,v), D) =
     in Dict.insert (Dict.insert (D, u, v :: vs), v, u :: us)
     end
 
-(* input : (string * string) list *)
-val input =
-  List.map
-    (mkEdge o (String.tokens delim))
-    (readInput (TextIO.openIn "day12test1.txt"))
-
-(* Adj : Dict.Key.ord_key list Dict.map *)
-val Adj = foldl ins Dict.empty input
-
 (* isSmall : string -> bool *)
 fun isSmall s = Char.isLower (String.sub (s, 0))
 
 (* pathToString : string list -> string *)
-fun pathToString path = List.foldl (fn (x, acc) => acc ^ x) "" path
+fun pathToString p = List.foldl (fn (x, acc) => acc ^ x) "" p
 
 (* eq : string * string -> bool *)
 fun eq (a, b) =  case String.compare (a, b) of EQUAL => true | _ => false
 
-(* Advent of Code 2021, Puzzle 22 *)
+(* memberOf : string list * string -> bool *)
+fun memberOf (L, e) = List.exists (fn x => eq (x, e)) L
+
+fun dfs (Adj, s, f) =
+  let val us = Dict.lookup (Adj, s)
+  in List.foldl (dfsVisit Adj s f []) [] us
+  end
+and dfsVisit Adj u f path = fn (v, acc) =>
+  let
+    val ws = Dict.lookup (Adj, v)
+    val p = path @ [u]
+  in
+    case (eq (u, f), isSmall u, memberOf (path, u)) of
+      (false, false, _    ) => List.foldl (dfsVisit Adj v f p) acc ws
+    | (false, true , false) => List.foldl (dfsVisit Adj v f p) acc ws
+    | (false, true , true ) => acc
+    | (true , _    , _    ) =>
+      let val e = pathToString p
+          val L = List.map (fn x => pathToString x) acc
+      in  if memberOf (L, e)
+          then acc
+          else p :: acc
+      end
+  end
+
+(* input : (string * string) list *)
+val input1 = List.map (mkEdge o (String.tokens delim))
+    (readInput (TextIO.openIn "day12test1.txt"))
+val input2 = List.map (mkEdge o (String.tokens delim))
+    (readInput (TextIO.openIn "day12test2.txt"))
+val input3 = List.map (mkEdge o (String.tokens delim))
+    (readInput (TextIO.openIn "day12test3.txt"))
+val input = List.map (mkEdge o (String.tokens delim))
+    (readInput (TextIO.openIn "day12Input.txt"))
+
+(* Adj : Dict.Key.ord_key list Dict.map *)
+val Adj1 = foldl ins Dict.empty input1
+val Adj2 = foldl ins Dict.empty input2
+val Adj3 = foldl ins Dict.empty input3
+val Adj  = foldl ins Dict.empty input
+
+(* unit tests and solution *)
+val test1 = List.length (dfs (Adj1, "start", "end"))
+val test2 = List.length (dfs (Adj2, "start", "end"))
+val test3 = List.length (dfs (Adj3, "start", "end"))
+val soln23  = List.length (dfs (Adj, "start", "end"))
+
+(* Advent of Code 2021, Puzzle 24 *)
