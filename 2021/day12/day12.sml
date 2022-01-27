@@ -48,7 +48,7 @@ fun isSmall s = Char.isLower (String.sub (s, 0))
 (* eq : string * string -> bool *)
 fun eq (a, b) =  case String.compare (a, b) of EQUAL => true | _ => false
 
-fun findPaths1 Adj =
+fun dfs1 Adj =
   let
     val keys = Dict.listKeys Adj
     val init = fn (x, acc) => Dict.insert (acc, x, 0)
@@ -57,9 +57,9 @@ fun findPaths1 Adj =
     val vs = Dict.lookup (Adj, u)
     val p = ""
   in
-    List.foldl (findPaths1' Adj Visited u p) Dict.empty vs
+    List.foldl (dfsVisit1 Adj Visited u p) Dict.empty vs
   end
-and findPaths1' Adj Visited u p = fn (v, acc) =>
+and dfsVisit1 Adj Visited u p = fn (v, acc) =>
   let
     val small_u = isSmall u
     val visited_count_u = Dict.lookup (Visited, u)
@@ -68,13 +68,13 @@ and findPaths1' Adj Visited u p = fn (v, acc) =>
     val q = p ^ u
     val Visited' = Dict.insert (Visited, u, visited_count_u + 1)
     val ws = Dict.lookup (Adj, v)
-    val findFn = findPaths1' Adj Visited' v q
+    val dfsVisitFn1 = dfsVisit1 Adj Visited' v q
   in
     case (found_f, small_u, visited_u) of
-      (false, false, _    ) => List.foldl findFn acc ws
-    | (false, true , false) => List.foldl findFn acc ws
-    | (false, true , true ) => acc
-    | (true , _    , _    ) => Dict.insert (acc, q, 0)
+      (false,false,_    ) => List.foldl dfsVisitFn1 acc ws
+    | (false,true ,false) => List.foldl dfsVisitFn1 acc ws
+    | (false,true ,true ) => acc
+    | (true ,_    ,_    ) => Dict.insert (acc, q, 0)
   end
 
 (* input : (string * string) list *)
@@ -94,14 +94,14 @@ val Adj3 = foldl ins Dict.empty input3
 val Adj  = foldl ins Dict.empty input
 
 (* unit tests and solution *)
-val test1_1 = Dict.numItems (findPaths1 Adj1)
-val test2_1 = Dict.numItems (findPaths1 Adj2)
-val test3_1 = Dict.numItems (findPaths1 Adj3)
-val soln23 = Dict.numItems (findPaths1 Adj)
+val test1_1 = Dict.numItems (dfs1 Adj1)
+val test2_1 = Dict.numItems (dfs1 Adj2)
+val test3_1 = Dict.numItems (dfs1 Adj3)
+val soln23 = Dict.numItems (dfs1 Adj)
 
 (* Advent of Code 2021, Puzzle 24 *)
 
-fun findPaths2 Adj =
+fun dfs2 Adj =
   let
     val keys = Dict.listKeys Adj
     val init = fn (x, acc) => Dict.insert (acc, x, 0)
@@ -111,9 +111,9 @@ fun findPaths2 Adj =
     val p = ""
     val b = false
   in
-    List.foldl (findPaths2' Adj Visited u p b) Dict.empty vs
+    List.foldl (dfsVisit2 Adj Visited u p b) Dict.empty vs
   end
-and findPaths2' Adj Visited u p b = fn (v, acc) =>
+and dfsVisit2 Adj Visited u p b = fn (v, acc) =>
   let
     val small_u = isSmall u
     val visited_count_u = Dict.lookup (Visited, u)
@@ -123,20 +123,20 @@ and findPaths2' Adj Visited u p b = fn (v, acc) =>
     val q = p ^ u
     val Visited' = Dict.insert (Visited, u, visited_count_u + 1)
     val ws = Dict.lookup (Adj, v)
-    val findFn = fn x => findPaths2' Adj Visited' v q x
+    val dfsVisitFn2 = fn x => dfsVisit2 Adj Visited' v q x
   in
     case (found_s, found_f, small_u, visited_u, b) of
-      (true , _    , _    , false, _    ) => List.foldl (findFn b) acc ws
-    | (true , _    , _    , true , _    ) => acc
-    | (false, false, false, _    , _    ) => List.foldl (findFn b) acc ws
-    | (false, false, true , false, _    ) => List.foldl (findFn b) acc ws
-    | (false, false, true , true , false) => List.foldl (findFn true) acc ws
-    | (false, false, true , true , true ) => acc
-    | (false, true , _    , _    , _    ) => Dict.insert (acc, q, 0)
+      (true ,_    ,_    ,false,_    ) => List.foldl (dfsVisitFn2 b) acc ws
+    | (true ,_    ,_    ,true ,_    ) => acc
+    | (false,false,false,_    ,_    ) => List.foldl (dfsVisitFn2 b) acc ws
+    | (false,false,true ,false,_    ) => List.foldl (dfsVisitFn2 b) acc ws
+    | (false,false,true ,true ,false) => List.foldl (dfsVisitFn2 true) acc ws
+    | (false,false,true ,true ,true ) => acc
+    | (false,true ,_    ,_    ,_    ) => Dict.insert (acc, q, 0)
   end
 
 (* unit tests and solution *)
-val test1_2 = Dict.numItems (findPaths2 Adj1)
-val test2_2 = Dict.numItems (findPaths2 Adj2)
-val test3_2 = Dict.numItems (findPaths2 Adj3)
-val soln24 = Dict.numItems (findPaths2 Adj)
+val test1_2 = Dict.numItems (dfs2 Adj1)
+val test2_2 = Dict.numItems (dfs2 Adj2)
+val test3_2 = Dict.numItems (dfs2 Adj3)
+val soln24 = Dict.numItems (dfs2 Adj)

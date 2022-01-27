@@ -16,8 +16,8 @@ val ins = fn :
    -> Dict.Key.ord_key list Dict.map
 val isSmall = fn : string -> bool
 val eq = fn : string * string -> bool
-val findPaths1 = fn : Dict.Key.ord_key list Dict.map -> int Dict.map
-val findPaths1' = fn :
+val dfs1 = fn : Dict.Key.ord_key list Dict.map -> int Dict.map
+val dfsVisit1 = fn :
   Dict.Key.ord_key list Dict.map
    -> int Dict.map
    -> string -> string -> Dict.Key.ord_key * int Dict.map -> int Dict.map
@@ -46,8 +46,8 @@ val test1_1 = 10 : int
 val test2_1 = 19 : int
 val test3_1 = 226 : int
 val soln23 = 5104 : int
-val findPaths2 = fn : Dict.Key.ord_key list Dict.map -> int Dict.map
-val findPaths2' = fn :
+val dfs2 = fn : Dict.Key.ord_key list Dict.map -> int Dict.map
+val dfsVisit2 = fn :
   Dict.Key.ord_key list Dict.map
    -> int Dict.map
    -> string
