@@ -118,7 +118,47 @@ val soln25 = List.length (fastDoop (cmp, points1))
 
 (* Advent of Code 2021, Puzzle 26 *)
 val folded = List.foldl (fn (f,acc) => List.map (applyFold f) acc) points folds
-val origami = fastDoop (cmp, folded)
+val origami = List.map (fn (x, y) => (y, x)) (fastDoop (cmp, folded))
 
-(* plot : (int * int) list -> unit *)
-  
+fun f ((i,j), (imax, jmax)) =
+  case (i > imax, j > jmax) of
+    (false, false) => (imax, jmax)
+  | (false, true ) => (imax, j   )
+  | (true , false) => (i   , jmax)
+  | (true , true ) => (i   , j   )
+
+val (imax, jmax) = List.foldl f (0,0) origami
+val (m, n) = (imax + 1, jmax + 1)
+
+(* update : 'a list * int * int * 'a -> 'a list *)
+fun update (arr, i, j, a) =
+  let val idx = n * i + j
+  in List.take (arr, idx) @ (a :: List.drop (arr, idx + 1))
+  end
+
+(* plot : (int * int) * string list -> string list *)
+fun plot ((i, j), arr) = update (arr, i, j, "#")
+
+(* enum : 'a list -> (int * 'a) list *)
+fun enum L = ListPair.zip (List.tabulate (List.length L, fn x => x), L)
+
+(* toIndex : int -> int * int *)
+fun toIndex k = (k div n, k mod n)
+
+(* disp : (int * int) list -> unit *)
+fun disp ps =
+  let
+    val row = List.tabulate (n, fn i => " ")
+    val arr = List.concat (List.tabulate (m, fn i => row))
+    val arr' = enum (List.foldl plot arr ps)
+
+    fun impl [] = ""
+      | impl ((k, a) :: xs) =
+        let val (i, j) = toIndex k
+        in  case Int.compare (j, jmax) of
+              EQUAL => a ^ "\n" ^ impl xs
+            | _ => a ^ impl xs
+        end
+  in
+    print (impl arr' ^ "\n")
+  end

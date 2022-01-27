@@ -1,0 +1,77 @@
+rmsteele@Arch:day13$ smlnj day13.sml
+Standard ML of New Jersey (64-bit) v110.99.2 [built: Wed Sep 29 16:07:17 2021]
+[opening day13.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[library $SMLNJ-BASIS/(basis.cm):basis-common.cm is stable]
+[autoloading done]
+val readInput = fn : TextIO.instream -> string list
+val lines =
+  ["982,10\n","1094,887\n","895,815\n","1216,453\n","1258,747\n","162,663\n",
+   "552,568\n","271,662\n","333,863\n","1252,65\n","1009,687\n","900,887\n",
+   "199,273\n","254,352\n","345,787\n","688,502\n",...] : string list
+val s1 = "fold along" : string
+val pos =
+  ["982,10\n","1094,887\n","895,815\n","1216,453\n","1258,747\n","162,663\n",
+   "552,568\n","271,662\n","333,863\n","1252,65\n","1009,687\n","900,887\n",
+   "199,273\n","254,352\n","345,787\n","688,502\n",...] : string list
+val neg =
+  ["fold along x=655\n","fold along y=447\n","fold along x=327\n",
+   "fold along y=223\n","fold along x=163\n","fold along y=111\n",
+   "fold along x=81\n","fold along y=55\n","fold along x=40\n",
+   "fold along y=27\n","fold along y=13\n","fold along y=6\n"] : string list
+val delim1 = fn : char -> bool
+val mkPair1 = fn : 'a list -> 'a * 'a
+val mkPoint = fn : string * string -> int * int
+val points =
+  [(982,10),(1094,887),(895,815),(1216,453),(1258,747),(162,663),(552,568),
+   (271,662),(333,863),(1252,65),(1009,687),(900,887),(199,273),(254,352),
+   (345,787),(688,502),...] : (int * int) list
+datatype fold = AlongX of int | AlongY of int
+val delim2 = fn : char -> bool
+val mkPair2 = fn : 'a list -> 'a * 'a
+val mkFold = fn : string * string -> fold
+val folds =
+  [AlongX 655,AlongY 447,AlongX 327,AlongY 223,AlongX 163,AlongY 111,
+   AlongX 81,AlongY 55,AlongX 40,AlongY 27,AlongY 13,AlongY 6] : fold list
+val applyFold = fn : fold -> int * int -> int * int
+type 'a ord = 'a * 'a -> order
+val split = fn : 'a list -> 'a list * 'a list
+val merge = fn : 'a ord * 'a list * 'a list -> 'a list
+val msort = fn : 'a ord * 'a list -> 'a list
+val doop = fn : 'a ord -> 'a * 'a list -> 'a list
+val fastDoop = fn : 'a ord * 'a list -> 'a list
+val cmp = fn : (int * int) * (int * int) -> order
+val fold1 = AlongX 655 : fold
+val points1 =
+  [(328,10),(216,887),(415,815),(94,453),(52,747),(162,663),(552,568),
+   (271,662),(333,863),(58,65),(301,687),(410,887),(199,273),(254,352),
+   (345,787),(622,502),...] : (int * int) list
+val soln25 = 818 : int
+val folded =
+  [(0,2),(28,5),(5,3),(12,5),(28,5),(0,5),(20,4),(25,4),(5,3),(22,3),(25,1),
+   (0,5),(35,5),(8,2),(17,3),(32,0),...] : (int * int) list
+val origami =
+  [(0,0),(1,0),(2,0),(3,0),(4,0),(5,0),(5,1),(5,2),(5,3),(0,5),(1,5),(2,5),
+   (3,5),(4,5),(5,5),(0,6),...] : (int * int) list
+val f = fn : (int * int) * (int * int) -> int * int
+val imax = 5 : int
+val jmax = 38 : int
+val m = 6 : int
+val n = 39 : int
+val update = fn : 'a list * int * int * 'a -> 'a list
+val plot = fn : (int * int) * string list -> string list
+val enum = fn : 'a list -> (int * 'a) list
+val toIndex = fn : int -> int * int
+val disp = fn : (int * int) list -> unit
+- val soln26 = disp origami;
+#    ###   ##  ###  ###  ####  ##  ###
+#    #  # #  # #  # #  # #    #  # #  #
+#    #  # #    #  # #  # ###  #    ###
+#    ###  # ## ###  ###  #    #    #  #
+#    # #  #  # #    # #  #    #  # #  #
+#### #  #  ### #    #  # ####  ##  ###
+
+val soln26 = () : unit
+-
+rmsteele@Arch:day13$
