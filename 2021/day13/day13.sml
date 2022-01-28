@@ -117,9 +117,19 @@ val points1 = List.map (applyFold fold1) points
 val soln25 = List.length (fastDoop (cmp, points1))
 
 (* Advent of Code 2021, Puzzle 26 *)
-val folded = List.foldl (fn (f,acc) => List.map (applyFold f) acc) points folds
-val origami = List.map (fn (x, y) => (y, x)) (fastDoop (cmp, folded))
 
+(* apply all folds to points to get list of folded points *)
+val folded1 = List.foldl (fn (f,acc) => List.map (applyFold f) acc) points folds
+
+(* All points with same y-value correspond to same row of output in terminal.
+ * Transpose list of folded points for pretty printing.
+ *)
+val folded2 = List.map (fn (x, y) => (y, x)) folded1
+
+(* remove duplicates from list and put in cmp-order *)
+val origami = fastDoop (cmp, folded2)
+
+(* function for accumulating maximum for i and j indices *)
 fun f ((i,j), (imax, jmax)) =
   case (i > imax, j > jmax) of
     (false, false) => (imax, jmax)
@@ -127,8 +137,9 @@ fun f ((i,j), (imax, jmax)) =
   | (true , false) => (i   , jmax)
   | (true , true ) => (i   , j   )
 
-val (imax, jmax) = List.foldl f (0,0) origami
-val (m, n) = (imax + 1, jmax + 1)
+(* obtain bounds (m, n) : int * int for output arr : string list *)
+val (imax, jmax) = List.foldl f (0,0) origami                 (* zero-based *)
+val (m, n) = (imax + 1, jmax + 1)               (* add 1 for correct length *)
 
 (* update : 'a list * int * int * 'a -> 'a list *)
 fun update (arr, i, j, a) =
