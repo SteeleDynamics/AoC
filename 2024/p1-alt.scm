@@ -33,7 +33,7 @@
 ;; split procedure
 (define (split L)
   (cond ((null? L) (list '() '()))
-        ((null? (cdr L)) (list (list (car L)) '()))
+        ((null? (cdr L)) (list L '()))
         (else
          (let* ((x (car L))
                 (y (cadr L))
