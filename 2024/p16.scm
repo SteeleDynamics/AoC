@@ -219,6 +219,7 @@
                     diff dims (snoc acc ind))
       acc))
 
+;; make-nodes-cmb procedure
 (define (make-nodes-cmb ind1 dims)
   (lambda (acc ind2)
     (let* ((diff (ind-sub ind2 ind1))
