@@ -195,27 +195,25 @@
       (filter incr? (map pred (list right up left down))))))
 
 ;; find-one procedure (using CPS)
-(define (find-one pred? arr inds sc fc)
-  (cond ((null? inds) (fc))
-        ((pred? arr (car inds)) (sc (car inds)))
-        (else (find-one pred? arr (adj-list arr (car inds)) sc
-                        (lambda () (find-one pred? arr (cdr inds) sc fc))))))
+(define (find-one p? a xs sc fc)
+  (cond ((null? xs) (fc))
+        ((p? a (car xs)) (sc (car xs)))
+        (else (find-one p? a (adj-list a (car xs)) sc
+                        (lambda () (find-one p? a (cdr xs) sc fc))))))
 
-;; find-n procedure (using CPS)
-(define (find-n pred? arr inds n sc fc)
-  (if (zero? n)
-      (sc '())
-      (let* ((neq? (lambda (ind1 ind2) (not (equal? ind1 ind2))))
-             (pred*? (lambda (ind1) (lambda (arr ind2) (and (pred? arr ind2)
-                                                  (neq? ind2 ind1)))))
-             (succ (lambda (ind) (find-n (pred*? ind) arr inds (- n 1)
-                                    (lambda (res) (sc (cons ind res))) fc))))
-        (find-one pred? arr inds succ fc))))
+;; dfs procedure (using CPS)
+(define (dfs p? a xs k)
+  (let* ((neq? (lambda (x y) (not (equal? x y))))
+         (q? (lambda (y) (lambda (a x) (and (p? a x) (neq? x y)))))
+         (sc (lambda (x) (dfs (q? x) a xs (lambda (r) (k (cons x r))))))
+         (fc (lambda () (k '()))))
+    (find-one p? a xs sc fc)))
 
 ;; CPS predicate and continuation procedures 
-(define pred? (lambda (arr ind) (= (array-ref arr ind) 9)))
+(define p? (lambda (a x) (= (array-ref a x) 9)))
 (define sc (lambda (x) x))
 (define fc (lambda () #f))
+(define k (lambda (x) x))
 
 ;; example
 (define ex-input (read-input "p19-ex.txt"))
