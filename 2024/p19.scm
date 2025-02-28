@@ -202,13 +202,13 @@
                         (lambda () (find-one pred? arr (cdr inds) sc fc))))))
 
 ;; find-n procedure (using CPS)
-(define (find-n pred? eqr? arr inds n sc fc)
+(define (find-n pred? arr inds n sc fc)
   (if (zero? n)
       (sc '())
-      (let* ((neqr? (lambda (ind1 ind2) (not (eqr? ind1 ind2))))
+      (let* ((neq? (lambda (ind1 ind2) (not (equal? ind1 ind2))))
              (pred*? (lambda (ind1) (lambda (arr ind2) (and (pred? arr ind2)
-                                                  (neqr? ind2 ind1)))))
-             (succ (lambda (ind) (find-n (pred*? ind) eqr? arr inds (- n 1)
+                                                  (neq? ind2 ind1)))))
+             (succ (lambda (ind) (find-n (pred*? ind) arr inds (- n 1)
                                     (lambda (res) (sc (cons ind res))) fc))))
         (find-one pred? arr inds succ fc))))
 
