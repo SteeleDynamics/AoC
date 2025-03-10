@@ -141,43 +141,27 @@
          (valid (fold-left (lambda (acc elt) (and acc elt)) #t within)))
     (if valid ind #f)))
 
-;; TODO: rewrite using ind-incr procedure
-;; subvector-disp procedure
-(define (subvector-disp vec beg end w)
-  (do ((i beg (+ i 1)))
-      ((>= i end))
-    (display (format "~vd" w (vector-ref vec i))))
-  (newline))
+;; array-disp-iter procedure
+(define (array-disp-iter arr ind w)
+  (let ((i (if ind (last ind) #f))
+        (j (if ind (next-to-last ind) #f))
+        (next (if ind (ind-incr ind (array-dims arr)) #f)))
+    (cond ((and ind (zero? i) (zero? j) (> (fold-left + 0 ind) 0))
+           (display (format "~2%~vd" w (array-ref arr ind)))
+           (array-disp-iter arr next w))
+          ((and ind (zero? i) (> (fold-left + 0 ind) 0))
+           (display (format "~%~vd" w (array-ref arr ind)))
+           (array-disp-iter arr next w))
+          (ind
+           (display (format "~vd" w (array-ref arr ind)))
+           (array-disp-iter arr next w))
+          (else
+           (display (format "~%"))))))
 
-;; TODO: rewrite using ind-incr procedure
-;; vector-disp-iter procedure
-(define (vector-disp-iter vec len pos m n w)
-  (cond ((zero? m)
-         (subvector-disp vec pos n w))
-        ((zero? pos)
-         (subvector-disp vec pos (+ pos n) w)
-         (vector-disp-iter vec len (+ pos n) m n w))
-        (else
-         (cond ((= pos (- len n))
-                (subvector-disp vec pos (+ pos n) w))
-               ((zero? (remainder (+ pos n) (* m n)))
-                (subvector-disp vec pos (+ pos n) w)
-                (newline)
-                (vector-disp-iter vec len (+ pos n) m n w))
-               (else
-                (subvector-disp vec pos (+ pos n) w)
-                (vector-disp-iter vec len (+ pos n) m n w))))))
-
-;; TODO: rewrite using ind-incr procedure
 ;; array-disp procedure
 (define (array-disp arr w)
-  (let* ((vec (array-vector arr))
-         (dims (array-dims arr))
-         (len (vector-length vec))
-         (rank (length dims))
-         (m (if (> rank 1) (next-to-last dims) 0))
-         (n (last dims)))
-    (vector-disp-iter vec len 0 m n w)))
+  (let ((ind (map (lambda (x) 0) (array-dims arr))))
+    (array-disp-iter arr ind w)))
 
 ;;; problem-specific procedures
 
@@ -214,6 +198,14 @@
 (define sc (lambda (x) x))
 (define fc (lambda () #f))
 (define k (lambda (x) x))
+
+;; arrays for testing array-disp procedure
+(define arr1 (vector->array '#(0 1 2 3 4 5 6 7 8 9 a b c d e f g h
+                               i j k l m n o p q r s t u v w x y z)
+                            '(3 2 3 2)))
+(define arr2 (vector->array '#(0 1 2 3 4 5 6 7 8 9 a b c d e f g h
+                               i j k l m n o p q r s t u v w x y z)
+                            '(2 2 3 3)))
 
 ;; example
 (define ex-input (read-input "p19-ex.txt"))
