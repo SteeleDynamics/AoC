@@ -199,6 +199,14 @@
 (define fc (lambda () #f))
 (define k (lambda (x) x))
 
+;; iter procedure
+(define (iter arr ind acc)
+  (cond ((and ind (zero? (array-ref arr ind)))
+         (iter arr (ind-incr ind (array-dims arr))
+               (+ acc (length (dfs p? arr (list ind) k)))))
+        (ind (iter arr (ind-incr ind (array-dims arr)) acc))
+        (else acc)))
+
 ;; arrays for testing array-disp procedure
 (define arr1 (vector->array '#(0 1 2 3 4 5 6 7 8 9 a b c d e f g h
                                i j k l m n o p q r s t u v w x y z)
@@ -214,6 +222,8 @@
   (fold-left (lambda (acc elt) (append acc (string->list elt))) '() ex-input))
 (define ex-list (map char->digit ex-chars))
 (define ex-arr (vector->array (list->vector ex-list) ex-dims))
+(define ex-ans (iter ex-arr '(0 0) 0))
+(begin ex-ans)
 
 ;; solving p19
 (define p19-input (read-input "p19-input.txt"))
@@ -222,3 +232,5 @@
   (fold-left (lambda (acc elt) (append acc (string->list elt))) '() p19-input))
 (define p19-list (map char->digit p19-chars))
 (define p19-arr (vector->array (list->vector p19-list) p19-dims))
+(define p19-ans (iter p19-arr '(0 0) 0))
+(begin p19-ans)
